@@ -1,0 +1,241 @@
+package project2_petstore;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+
+
+/**
+ *
+ * @author MariahGrade
+ */
+public class Project2_PetStore{
+
+    private static ArrayList<PremiumMember> premium= new ArrayList();
+    public static ArrayList<Pets> inventory= new ArrayList<Pets>();
+    public static ArrayList<Pets> customerCart= new ArrayList<Pets>();
+    private static ArrayList <Member> member= new ArrayList<Member>(); 
+    public static ArrayList<Pets> adoptable= new ArrayList<Pets>();
+    public static ArrayList<PetStoreExtention> inventoryRepeat= new ArrayList<PetStoreExtention>();
+   
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+    //this is the boolean value that will control the case/switch
+       boolean a= true;
+    //Adding all of the Pets objects to the inventory ArrayList
+    inventory.add(new Dog("Beethoven", "Male", 3.5, 150, "Beagle"));
+    inventory.add(new Dog("Hans", "Male", 2, 150, "Bull Terrier"));
+    inventory.add(new Dog("Lionel", "Male", 5, 150,"Komodor"));
+    inventory.add(new Dog("Neji", "Female", 1, 150, "Giant Schnauzer"));
+    inventory.add(new Cat("Pluto", "Female", 2, 100, "Himalayan"));
+    inventory.add(new Cat("Dexter", "Male", 3, 100, "Maine Coon"));
+    inventory.add(new Cat("Machu", "Female", 7.5, 100, "Sphynx"));
+    inventory.add(new Cat("Jasper", "Male", 3.5, 100, "Tabby"));
+    inventory.add(new Exotic("Mister", "Male", 2.5, 350, "Tarantula"));
+    inventory.add(new Exotic("Ursula", "Female", 1, 400, "Bearded Dragon"));
+    inventory.add(new Exotic("Nyrobi", "Female", 8, 6500, "Zebra"));
+    inventory.add(new Exotic("Alice", "Female", 2, 800, "Otter"));
+       Scanner sc = new Scanner(System.in);
+       //This is the first line printed when the project is run
+        PetStoreExtention ps = new PetStoreExtention("Molly's World of Wonders");
+        System.out.println("**** Welcome to " + ps.getStoreName() + "****");
+        //Begining of the case/switch, the boolean is true and will prompt the customer to make a selection
+        while (a) {
+            
+            System.out.println("Please select from one of the following menu otions");
+            System.out.println("\t1. Buy a new pet");
+            System.out.println("\t2. Register a new member");
+            System.out.println("\t3. Start adoption drive (add new pets)");
+            System.out.println("\t4. Check current inventory");
+            System.out.println("\t5. Compare pet prices");
+            System.out.println("\t6. Become a premium member");
+            System.out.println("\t7. Restock inventory");
+            System.out.println("\t8. Veiw cart/checkout");
+            System.out.println("\t9. Exit");
+
+            int choice1 = sc.nextInt();
+            
+            switch (choice1) {
+                //Asks a customer which type of pet they'd like to purchase, then displays the inventory of that particular type so they can add to their cart
+                case 1:
+                    System.out.println("What type of pet are you here to purchase? (Please type the number that corresponds to the pet you'd like)");
+                    System.out.println("\t1. Dogs");
+                    System.out.println("\t2. Cats");
+                    System.out.println("\t3. Exotic Pets");
+                    int type= sc.nextInt();
+                    for(Pets d: inventory){
+                    if(type == 1 && d instanceof Dog){                        
+                            System.out.println("Name: " +d.getName()+ " Sex: "+ d.getSex()+ " Age: " +d.getAge()+ " Price: "+d.getPrice());                        
+                    }else if(type==2 && d instanceof Cat){
+                        System.out.println("Name: " +d.getName()+ " Sex: "+ d.getSex()+ " Age: " +d.getAge()+ " Price: "+d.getPrice());
+                    }else if (type==3 && d instanceof Exotic){
+                        System.out.println("Name: " +d.getName()+ " Sex: "+ d.getSex()+ " Age: " +d.getAge()+ " Price: "+d.getPrice());
+                    }else if(type != 1 && type!=2 && type!=3){
+                        System.out.println("Invalid choice.");
+                    }
+                }
+                System.out.println("Please type the name of the pet you would like.");
+                String pet= sc.next();
+                //once the String is scanned, checks to see if that name is in the inventory ArrayList, if it is it adds that pet to the customer cart and removes it 
+                //from the inventory so it cannot be selected again
+                for(int i=0; i<inventory.size(); i++){
+                    if(pet.equalsIgnoreCase(inventory.get(i).getName())){
+                        customerCart.add(inventory.get(i));                                                
+                        System.out.println(inventory.get(i).getName() + " has been added to your cart.");
+                        inventory.remove(i);
+                    }
+                }
+                    break;          
+
+                case 2:
+                //Asks the customer to enter information so they can be added to the member ArrayList 
+                    System.out.println("Please enter your name: ");
+                    String name= sc.next();
+                    System.out.println("Please enter the last four digits of your phone number, this will be your member ID.");
+                    int ID= sc.nextInt();
+                    member.add(new Member(name, ID));
+                //Displays the information that the customer entered 
+                    System.out.println("Here's the information we have on file for you.");
+                    System.out.println("Name: "+name+" MemberID: "+ ID );
+                    System.out.println("Thank you for becoming a member today!");
+                    break;
+
+                case 3:
+                //Asks for information to be entered to put a new pet into the inventory which contains all animals available for adoption
+                System.out.println("Let's get this adoption drive started!");
+                System.out.println("Enter the information necessary to add an animal to the adoption list.");
+                System.out.println("What type of pet is this? (Dog/Cat/Exotic)");
+                String petType= sc.next();
+                System.out.println("What is the name of the animal?");
+                String aName= sc.next();
+                System.out.println("What is the sex of the animal? (Male/Female)");
+                String aSex= sc.next();
+                System.out.println("What is the age of the animal?");
+                double aAge= sc.nextDouble();
+                System.out.println("What is the price for adoption of this animal?");
+                double aPrice= sc.nextDouble();
+                //Checks the type of pet that is entered to create the correct object type and add it to the inventory ArrayList
+                if(petType.equalsIgnoreCase("Dog")){
+                inventory.add(new Dog(aName, aSex, aAge, aPrice, petType));
+                }else if(petType.equalsIgnoreCase("Cat")){
+                    inventory.add(new Cat(aName,aSex,aAge,aPrice,petType));
+                }else if(petType.equalsIgnoreCase("Exotic")){
+                    inventory.add(new Exotic(aName,aSex,aAge,aPrice,petType));
+                }else{ System.out.println("This is not a valid type.");
+            }
+            //Let's user know that the pet they've enetered has been added to the ArrayList and then runs the adoptionDrive() method                
+                System.out.println("Perfect, this pet has been added to the list of adoptable pets!"); 
+                Pets.adoptionDrive(inventory);
+                    break;
+
+                case 4:
+                //Prints out the inventory
+                System.out.println("This is our current inventory: ");
+                for(Pets p: inventory){
+                    System.out.println("Name: " +p.getName()+ " Sex: "+ p.getSex()+ " Age: " +p.getAge()+ " Price: "+p.getPrice());
+                }
+                    break;
+
+                case 5:
+                //Prints out the inventory so the user can select which pet prices they'd like to compare
+                    System.out.println("Here is the list of pets you can compare: ");
+                    for(Pets i: inventory){
+                        System.out.println("Name: " +i.getName()+ " Sex: "+ i.getSex()+ " Age: " +i.getAge()+ " Price: "+i.getPrice());
+                    }
+                    System.out.println("Please enter the name of the first pet you'd like a comparison on: ");
+                    String firstPet= sc.next();
+                    System.out.println("Please enter the name of the second pet you'd like a comparion on: ");
+                    String secondPet= sc.next();
+                    //Declares Pets and creates PetStoreExtention objects to be used in the compareTo() method since Pets is abstract and cannot be instantiated 
+                    Pets pet1= new PetStoreExtention();
+                    Pets pet2= new PetStoreExtention();
+
+                    for(Pets i: inventory){
+                            if(i.getName().equalsIgnoreCase(firstPet)){
+                                pet1=i;                                
+                            }
+                    for(Pets j: inventory){
+                        if(j.getName().equalsIgnoreCase(secondPet)){
+                            pet2= j;
+                            
+                        }
+                    }
+
+                    }  
+                    System.out.println("Name: " +pet1.getName()+ " Price: " + pet1.getPrice());
+                    System.out.println("Name: " +pet2.getName()+ " Price: " + pet2.getPrice());
+                    //Takes the objects to compare their prices
+                    System.out.println(pet1.compareTo(pet2));                    
+                    break;
+                    
+                case 6: 
+                //Takes user input to add a new premium membership, which costs $10
+                    System.out.println("Please enter your full name.");
+                String customer= sc.next();
+                    System.out.println("Please enter the last four digits of your phone number, this will be your member ID.");
+                    int cId= sc.nextInt();
+                    premium.add(new PremiumMember(customer, cId, true)); 
+                    System.out.println("Here's the information we have on file for you: ");
+                    System.out.println("Name: " + customer+" MemberID: "+cId);
+                    System.out.println("There is a fee of $10 to become a premium member, this will be added to your total today at checkout.");
+                    break;
+
+                    case 7:
+                    //Allows a new pet to be added to the inventory and then displays the total price of all pets in stock
+                    System.out.println("What type of pet would you like to restock? (Dog/Cat/Exotic)");
+                    String petRestock= sc.next();
+                    System.out.println("What is the name of the animal?");
+                    String rName= sc.next();
+                    System.out.println("What is the sex of the animal? (Male/Female)");
+                    String rSex= sc.next();
+                    System.out.println("What is the age of the animal?");
+                    double rAge= sc.nextDouble();
+                    System.out.println("What is the price of this animal?");
+                    double rPrice= sc.nextDouble();
+                    if(petRestock.equalsIgnoreCase("Dog")){
+                        inventory.add(new Dog(rName, rSex, rAge, rPrice, petRestock));
+                        }else if(petRestock.equalsIgnoreCase("Cat")){
+                            inventory.add(new Cat(rName,rSex,rAge,rPrice,petRestock));
+                        }else if(petRestock.equalsIgnoreCase("Exotic")){
+                            inventory.add(new Exotic(rName,rSex,rAge,rPrice,petRestock));
+                        }else{ System.out.println("This is not a valid type.");
+                    }
+                    //Displays the pets in the inventory along with prices of each 
+                    System.out.println("Here are all the pets in the inventory along with their prices after you've completed the restock: ");
+                    for(Pets k: inventory){
+                        System.out.println("Name: " +k.getName()+ " Price: " +k.getPrice());
+                    }
+                    System.out.println("The total value of this inventory is: ");
+                    PetStoreExtention pse= new PetStoreExtention(inventory);
+                    System.out.println("$"+pse.inventoryValue());
+                    break;
+
+                case 8:
+                //Displays the pets added to the cart from case 1 and gives the total cost for a regular member and premium member
+                System.out.println("Here's your cart: ");
+                double p= 0;                
+                for(Pets i: customerCart){
+                    System.out.println("Name: " +i.getName()+ " Sex: "+ i.getSex()+ " Age: " +i.getAge()+ " Price: "+i.getPrice());
+                    p += i.getPrice();
+                }
+                double prem= p+10;
+                System.out.println("Your total is: $" + p);
+                System.out.println("If you signed up for a premium membership today your total is: $"+prem);
+                    break;
+
+                case 9:
+                    System.out.println("Thanks for visiting!");
+                    return;
+                default:
+                    System.out.println("Invalid choice, try again.");
+                    a= false;
+                         
+            }            
+        }                          
+       
+    } 
+ 
+}
+ 
